@@ -276,12 +276,14 @@ body{font-family:'맑은 고딕','Malgun Gothic',sans-serif;font-size:14px;backg
 const FORM_PATH = './공사계약_구비서류/';
 
 // 법령 링크 헬퍼
-const ADMIN_RULES = ['지방자치단체 입찰 및 계약집행기준', '설계감리업무 수행지침'];
+const ADMIN_RULES = ['지방자치단체 입찰 및 계약집행기준', '설계감리업무 수행지침', '공사계약 일반조건'];
 const LOCAL_LAWS = {'서울특별시교육청 계약업무 처리지침': FORM_PATH+'서울특별시교육청 계약업무 처리지침.pdf'};
 function lawUrl(name){
   if(LOCAL_LAWS[name]) return LOCAL_LAWS[name];
-  if(ADMIN_RULES.includes(name))
-    return 'https://www.law.go.kr/admRulSc.do?section=&menuId=5&subMenuId=41&tabMenuId=184&eventGubun=060201&query='+encodeURIComponent(name);
+  if(ADMIN_RULES.includes(name)){
+    const query = name === '공사계약 일반조건' ? '공사계약일반조건' : name;
+    return 'https://www.law.go.kr/admRulSc.do?section=admRul&menuId=5&subMenuId=41&tabMenuId=184&eventGubun=060201&query='+encodeURIComponent(query);
+  }
   return 'https://www.law.go.kr/lsSc.do?section=&menuId=1&subMenuId=15&tabMenuId=81&eventGubun=060101&query='+encodeURIComponent(name);
 }
 
@@ -517,9 +519,9 @@ const STAGES = [
     '착공 전 현장 사진 촬영 및 보관 (준공 비교용)'
   ],
   docs:[
-    {name:'착공계',req:'필수',cond:null,basis:'공사계약 일반조건',law:'지방계약법',file:'착공계.pdf',reason:'공사 시작을 발주기관에 알리는 기본 서류'},
+    {name:'착공계',req:'필수',cond:null,basis:'공사계약 일반조건',law:'공사계약 일반조건',file:'착공계.pdf',reason:'공사 시작을 발주기관에 알리는 기본 서류'},
     {name:'착공계+공정표+현장대리인계(간이)',req:'재량',cond:'소규모 간이공사 시 통합 사용',basis:'지방자치단체 입찰 및 계약집행기준',law:'지방계약법',file:'착공계,공정표,대리인계(간이).pdf',reason:'3종 통합 간이 서식 — 소규모 공사에서 편의상 사용'},
-    {name:'공정표',req:'필수',cond:null,basis:'공사계약 일반조건',law:'지방계약법',file:'공정표.pdf',reason:'공사 일정 관리를 위한 공정 계획서'},
+    {name:'공정표',req:'필수',cond:null,basis:'공사계약 일반조건',law:'공사계약 일반조건',file:'공정표.pdf',reason:'공사 일정 관리를 위한 공정 계획서'},
     {name:'현장대리인계',req:'필수',cond:null,basis:'건설산업기본법 제40조',law:'건설산업기본법',file:'현장대리인계.pdf',reason:'공사 현장을 책임질 현장대리인 지정 신고 서류'},
     {name:'수도전기료납부각서',req:'재량',cond:'계약 시 미징구한 경우',basis:'광열비채권 확보방안',law:'',file:'수도전기료납부각서.pdf',reason:'착공 시 수령도 가능 — 계약 시 미징구 시 이 단계에서 반드시 징구'},
   ],
