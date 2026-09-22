@@ -1,0 +1,75 @@
+async (page) => {
+  const assert = (condition, message) => { if (!condition) throw new Error(message); };
+  await page.reload();
+  await page.getByRole('button', {name: '원클릭 서류 작성', exact: true}).click();
+  const form = page.getByRole('region', {name: '원클릭 서류 작성', exact: true});
+  await form.getByRole('combobox', {name: '원클릭 프로그램 선택'}).selectOption('construction-seoul');
+  for (const [label, value] of [['공사명', '검증용 교실 개선공사'], ['기관명', '검증초등학교'], ['업체명', '검증건설'], ['대표자', '검증대표'], ['계약금액', '100000000'], ['계약일', '2026-09-22'], ['착공일', '2026-10-01'], ['착공예정일', '2026-10-01'], ['준공기한', '2026-11-30']]) {
+    await form.getByLabel(label, {exact: true}).fill(value);
+  }
+  await form.getByLabel('계약보증금율 (%)', {exact: true}).selectOption('10');
+  await form.getByLabel('하자보증금율 (%)', {exact: true}).selectOption('3');
+  await form.getByLabel('하자담보기간', {exact: true}).selectOption('1');
+  await form.getByLabel('하자보증시작일', {exact: true}).fill('2026-12-01');
+  await form.getByLabel('준공정산금액', {exact: true}).fill('95000000');
+  await form.getByLabel('실제준공일', {exact: true}).fill('2026-11-30');
+  await form.getByLabel('준공검사일', {exact: true}).fill('2026-12-01');
+  await form.getByLabel('지출일', {exact: true}).fill('2026-12-02');
+  await page.waitForFunction(() => document.getElementById('ocSummary').textContent.includes('10,000,000'));
+  assert((await form.getByRole('table', {name: '3.공사표준계약서', exact: true}).innerText()).includes('100,000,000'), 'Amount not reflected in contract');
+  const previewSelect = form.getByRole('combobox', {name: '미리보기 서식'});
+  const options = await previewSelect.locator('option').evaluateAll(options => options.map(option => option.value));
+  for (const option of options) {
+    await previewSelect.selectOption(option);
+    assert(await form.locator('.oc-preview-frame .oc-error').count() === 0, 'Preview error: ' + option);
+  }
+  await previewSelect.selectOption('3.공사표준계약서');
+  const title = form.getByRole('cell', {name: '공 사 도 급 표 준 계 약 서', exact: true});
+  await title.click();
+  await page.getByLabel('내용', {exact: true}).fill('검증용 공사도급표준계약서');
+  await page.getByRole('button', {name: '반영', exact: true}).click();
+  assert(await form.getByRole('cell', {name: '검증용 공사도급표준계약서', exact: true}).count() === 1, 'Document edit failed');
+  await form.getByRole('cell', {name: '검증용 공사도급표준계약서', exact: true}).click();
+  await page.getByRole('button', {name: '원본으로 복원', exact: true}).click();
+  await page.reload();
+  await page.getByRole('button', {name: '원클릭 서류 작성', exact: true}).click();
+  assert(await form.getByLabel('대표자', {exact: true}).inputValue() === '검증대표', 'Persistence failed');
+  const downloadWait = page.waitForEvent('download');
+  await form.getByRole('button', {name: '입력정보 저장', exact: true}).click();
+  const download = await downloadWait;
+  await download.saveAs('C:/obsi/contract/output/playwright/oneclick-inputs.json');
+  const chooserWait = page.waitForEvent('filechooser');
+  await form.getByRole('button', {name: '입력정보 불러오기', exact: true}).click();
+  const chooser = await chooserWait;
+  page.once('dialog', dialog => dialog.accept());
+  await chooser.setFiles('C:/obsi/contract/output/playwright/oneclick-inputs.json');
+  await page.waitForFunction(() => document.getElementById('oneclickStatus').textContent.includes('불러왔습니다'));
+  await page.evaluate(() => { window.__printCalls = 0; window.print = () => { window.__printCalls++; }; });
+  await form.getByRole('button', {name: '현재 서식 인쇄 / PDF', exact: true}).click();
+  await page.waitForFunction(() => window.__printCalls === 1);
+  await page.emulateMedia({media: 'print'});
+  await page.pdf({path: 'C:/obsi/contract/output/playwright/contract-print.pdf', format: 'A4', printBackground: true, preferCSSPageSize: true});
+  await page.emulateMedia({media: 'screen'});
+  await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+  await page.getByRole('button', {name: '설계용역비 산출', exact: true}).first().click();
+  const fee = page.getByRole('region', {name: '설계용역비 산출', exact: true});
+  await fee.getByLabel('용역명', {exact: true}).fill('검증용 설계용역');
+  await fee.getByLabel('총 예산액 (원)', {exact: true}).fill('100000000');
+  await fee.getByLabel('손해배상보험·공제 요율 (%)', {exact: true}).fill('1.012');
+  await fee.getByRole('button', {name: '설계용역비 산출', exact: true}).click();
+  assert(await fee.locator('.oc-fee-total').count() === 1, 'Design fee not calculated');
+  const total = await fee.locator('.oc-fee-total strong').innerText();
+  await fee.getByRole('button', {name: '산출서 인쇄 / PDF', exact: true}).click();
+  await page.waitForFunction(() => window.__printCalls === 2);
+  await page.emulateMedia({media: 'print'});
+  await page.pdf({path: 'C:/obsi/contract/output/playwright/design-fee-print.pdf', format: 'A4', printBackground: true, preferCSSPageSize: true});
+  await page.emulateMedia({media: 'screen'});
+  await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+  await fee.getByRole('button', {name: '설계용역 서류에 금액 반영'}).click();
+  assert(await form.getByLabel('용역명', {exact: true}).inputValue() === '검증용 설계용역', 'Fee handoff name failed');
+  assert(Number(await form.getByLabel('계약금액', {exact: true}).inputValue()) === Number(total.replace(/[^\d]/g, '')), 'Fee handoff amount failed');
+  await page.setViewportSize({width: 390, height: 844});
+  assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 2), 'Mobile page overflows horizontally');
+  await page.setViewportSize({width: 1600, height: 1100});
+  console.log('PASS: 32 document previews, form editing, persistence, JSON round-trip, contract PDF, fee PDF, fee-to-document transfer, mobile width. Design fee: ' + total);
+}

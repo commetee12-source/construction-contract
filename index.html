@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>공사계약 업무 자동화 시스템 | 서울특별시교육청</title>
+<link rel="stylesheet" href="assets/oneclick.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'맑은 고딕','Malgun Gothic',sans-serif;font-size:14px;background:#f0f4f8;color:#1a202c}
@@ -126,11 +127,17 @@ body{font-family:'맑은 고딕','Malgun Gothic',sans-serif;font-size:14px;backg
   </div>
   <div class="hdr-right">
     <span class="hdr-badge">로컬 오프라인 실행</span>
-    <button class="btn-reset" onclick="resetAll()">🔄 초기화</button>
+    <button class="btn-reset" onclick="resetAll()">🔄 절차 초기화</button>
   </div>
 </div>
 
 <div class="wrap">
+  <nav class="workspace-tabs" aria-label="업무 선택">
+    <button type="button" class="workspace-tab active" data-pane="workflowPane" aria-pressed="true">계약 절차 안내</button>
+    <button type="button" class="workspace-tab" data-pane="oneclickPane" aria-pressed="false">원클릭 서류 작성</button>
+    <button type="button" class="workspace-tab" data-pane="feePane" aria-pressed="false">설계용역비 산출</button>
+  </nav>
+  <div id="workflowPane">
   <!-- 흐름도 -->
   <div class="card" style="margin-bottom:18px">
     <div class="card-title" style="cursor:pointer;margin-bottom:0" onclick="toggleFlow()">
@@ -268,6 +275,21 @@ body{font-family:'맑은 고딕','Malgun Gothic',sans-serif;font-size:14px;backg
     </div>
   </div>
 </div>
+  <section id="oneclickPane" class="hidden" aria-label="원클릭 서류 작성"></section>
+  <section id="feePane" class="hidden" aria-label="설계용역비 산출"></section>
+  <p id="oneclickStatus" class="oc-status" role="status" aria-live="polite"></p>
+</div>
+
+<dialog id="oneclickEditDialog" class="oc-edit-dialog">
+  <form method="dialog">
+    <h2>서식 항목 수정</h2>
+    <p>이 서식에만 반영됩니다. 공통 입력값과 자동 계산값은 입력 화면에서 수정하세요.</p>
+    <label for="oneclickEditValue">내용</label>
+    <textarea id="oneclickEditValue" rows="7"></textarea>
+    <div class="oc-actions"><button value="cancel">취소</button><button id="oneclickEditRestore" value="restore">원본으로 복원</button><button value="save" class="oc-primary">반영</button></div>
+  </form>
+</dialog>
+<div id="oneclickPrintRoot"></div>
 
 <script>
 // ───────────────────────────────────────────────
@@ -851,7 +873,7 @@ function showStage(id){
                ${d.cond?`<div class="cond">※ ${d.cond}</div>`:''}
              </td>
              <td>${d.law?`<a class="fl fl-law" href="${lawUrl(d.law)}" target="_blank">📖 ${d.basis}</a>`:`<span style="color:#9ca3af;font-size:12px">${d.basis||'—'}</span>`}</td>
-             <td>${d.file?`<a class="fl fl-doc" href="${FORM_PATH+d.file}" target="_blank">📄 열기</a>`:'<span style="color:#9ca3af;font-size:12px">해당없음</span>'}</td>
+             <td>${d.file?`<a class="fl fl-doc" href="${FORM_PATH+d.file}" target="_blank">📄 열기</a>${window.hasOneClickDocument?.(d.file.replace(/\.pdf$/, ''))?`<button type="button" class="fl fl-doc" data-oneclick-document="${encodeURIComponent(d.file.replace(/\.pdf$/, ''))}">원클릭 작성</button>`:''}`:'<span style="color:#9ca3af;font-size:12px">해당없음</span>'}</td>
            </tr>`;}).join('')}
          </tbody>
        </table>`;
@@ -918,5 +940,8 @@ function toggleFlow(){
 // 페이지 로드 시 저장된 상태 복원
 loadCheckedState();
 </script>
+<script src="assets/oneclick-data.js"></script>
+<script src="assets/oneclick-core.js"></script>
+<script src="assets/oneclick-ui.js"></script>
 </body>
 </html>

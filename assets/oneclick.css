@@ -1,0 +1,73 @@
+.workspace-tabs{display:flex;gap:6px;padding:5px;background:#e2e8f0;border-radius:10px;margin-bottom:20px}
+.workspace-tab{border:0;background:transparent;color:#475569;padding:12px 20px;border-radius:7px;cursor:pointer;font:600 14px 'Malgun Gothic',sans-serif}
+.workspace-tab.active{background:#fff;color:#1a56db;box-shadow:0 1px 3px #0f172a1a}
+.oc-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:20px}
+.oc-heading h2{font-size:23px;letter-spacing:-.6px;margin:0 0 7px}
+.oc-heading p,.oc-muted{font-size:12px;line-height:1.7;color:#64748b}
+.oc-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.oc-actions button,.oc-doc-controls button,.oc-button,.oc-actions a{padding:9px 13px;border:1px solid #cbd5e1;border-radius:7px;background:white;color:#334155;cursor:pointer;text-decoration:none;font:600 12px 'Malgun Gothic',sans-serif}
+.oc-actions .oc-primary,.oc-primary{color:white;background:#1a56db;border:1px solid #1a56db}
+.oc-actions button:disabled{opacity:.45;cursor:not-allowed}
+.oc-workspace{display:grid;grid-template-columns:minmax(330px,410px) minmax(0,1fr);gap:20px;align-items:start}
+.oc-panel{background:white;border:1px solid #e2e8f0;border-radius:12px;padding:20px;min-width:0}
+.oc-panel h3{font-size:15px;margin:0 0 14px;color:#1e3a5f}
+.oc-field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
+.oc-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.oc-field.wide{grid-column:1/-1}
+.oc-field label{font-size:12px;font-weight:600;color:#475569}
+.oc-field input,.oc-field select,.oc-field textarea,.oc-search,.oc-document-select{width:100%;border:1px solid #cbd5e1;border-radius:7px;padding:10px;color:#0f172a;background:white;font:13px 'Malgun Gothic',sans-serif;min-width:0}
+.oc-field input:focus,.oc-field select:focus,.oc-search:focus,.oc-document-select:focus{outline:2px solid #93c5fd;outline-offset:1px;border-color:#2563eb}
+.oc-field input:invalid:not(:placeholder-shown){border-color:#dc2626}
+.oc-input-group{border:0;border-top:1px solid #e2e8f0;margin-top:18px;padding-top:16px}
+.oc-input-group summary{font-size:14px;font-weight:700;cursor:pointer;padding-bottom:14px;color:#1e3a5f}
+.oc-note{border-left:3px solid #eab308;background:#fefce8;padding:11px 13px;font-size:12px;line-height:1.7;margin:14px 0;color:#713f12}
+.oc-note a{color:inherit;text-underline-offset:3px}
+.oc-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:#f8fafc;padding:13px;border-radius:8px;margin-top:16px}
+.oc-summary span{display:block;font-size:11px;color:#64748b;margin-bottom:5px}
+.oc-summary strong{font-size:14px;color:#0f172a}
+.oc-doc-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.oc-doc-controls .oc-document-select{flex:1;min-width:180px}
+.oc-doc-list{max-height:230px;overflow:auto;margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:2px 10px}
+.oc-doc-list label{display:flex;gap:8px;align-items:flex-start;padding:8px 3px;font-size:12px;cursor:pointer;line-height:1.5}
+.oc-doc-list input{margin-top:3px;accent-color:#1a56db}
+.oc-preview-frame{margin-top:16px;padding:24px;background:#e8edf3;border-radius:9px;overflow:auto;max-height:1050px}
+.oc-paper{background:#fff;color:#111827;padding:22px;margin:0 auto;box-shadow:0 2px 10px #0f172a14;box-sizing:content-box}
+.oc-sheet{border-collapse:collapse;table-layout:fixed;width:100%;font-family:'Malgun Gothic',sans-serif;line-height:1.45}
+.oc-sheet td{padding:2px 3px;overflow-wrap:anywhere;white-space:pre-wrap;box-sizing:border-box}
+.oc-sheet td.oc-editable{cursor:text}
+.oc-sheet td.oc-editable:hover{outline:2px solid #93c5fd;outline-offset:-2px;background:#eff6ff!important}
+.oc-sheet td.oc-overridden{box-shadow:inset 3px 0 #3b82f6}
+.oc-preview-title{font-size:12px;color:#64748b;margin-bottom:10px}
+.oc-error{color:#b91c1c;background:#fef2f2;padding:12px;border-radius:8px;line-height:1.7;font-size:13px}
+.oc-status{font-size:12px;min-height:20px;color:#475569;margin-top:12px}
+.oc-fee-total{background:#eff6ff;border-radius:10px;padding:20px;margin-bottom:20px}
+.oc-fee-total span{display:block;font-size:12px;color:#1e40af}
+.oc-fee-total strong{font-size:30px;letter-spacing:-1px;display:block;margin:8px 0;color:#1e3a8a}
+.oc-breakdown{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:18px}
+.oc-breakdown th,.oc-breakdown td{padding:11px 8px;border-bottom:1px solid #e2e8f0;text-align:right}
+.oc-breakdown th:first-child,.oc-breakdown td:first-child{text-align:left}
+.oc-fee-options{margin:15px 0}
+.oc-edit-dialog{border:1px solid #cbd5e1;border-radius:12px;padding:24px;width:min(560px,90vw);margin:auto;box-shadow:0 10px 50px #0f172a33}
+.oc-edit-dialog::backdrop{background:#0f172a66}
+.oc-edit-dialog h2{font-size:18px;margin-bottom:10px}
+.oc-edit-dialog p{font-size:12px;color:#64748b;line-height:1.7;margin-bottom:15px}
+.oc-edit-dialog label{font-size:13px;display:block;margin-bottom:6px}
+.oc-edit-dialog textarea{width:100%;font:14px 'Malgun Gothic',sans-serif;border:1px solid #94a3b8;border-radius:6px;padding:10px;margin-bottom:15px;resize:vertical}
+#oneclickPrintRoot{display:none}
+@media(max-width:1000px){.oc-workspace{grid-template-columns:1fr}.oc-heading{flex-direction:column}.oc-preview-frame{max-height:800px}.oc-field-grid{grid-template-columns:1fr 1fr}.workspace-tab{flex:1;padding:11px 6px;font-size:12px}.hdr{padding:14px}.hdr-left h1{font-size:15px}.hdr-badge{display:none}.wrap{padding:12px}}
+@media(max-width:480px){.oc-field-grid,.oc-doc-list{grid-template-columns:1fr}.oc-panel{padding:15px}.oc-heading h2{font-size:20px}}
+@media print{
+ .workspace-tabs,.oc-status{display:none!important}
+ body.oc-printing>*:not(#oneclickPrintRoot){display:none!important}
+ body.oc-printing #oneclickPrintRoot{display:block!important}
+ body.oc-printing{background:white;margin:0}
+ .oc-print-page{page-break-after:always;break-after:page;margin:0;padding:0}
+ .oc-print-page.landscape{page:oneclick-landscape}
+ .oc-print-page:last-child{page-break-after:auto;break-after:auto}
+ .oc-print-page .oc-paper{box-shadow:none;margin:0;padding:0;box-sizing:border-box;width:100%!important}
+ .oc-print-page td{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ .oc-print-page tr{break-inside:avoid;page-break-inside:avoid}
+ .oc-print-page .oc-overridden{box-shadow:none}
+}
+@page{size:A4 portrait;margin:12mm}
+@page oneclick-landscape{size:A4 landscape;margin:12mm}
